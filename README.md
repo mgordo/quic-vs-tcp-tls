@@ -2,7 +2,7 @@
 Tests and scripts to compare performance of quic vs tcp+tls1.2
 
 This small project contains several scripts to measure performance of tcp+tlsv1.2 VS quic, Google's UDP based protocol.
-The project sets a quic server and a quic client, and uses netem and iproute2 to send a pseudo-random file (so as to avoid compression techniques) from the server to the client. The same is done for a tcp server (Apache) with a client (using wget)
+The project sets a quic server and a quic client, and uses netem and iproute2 to send a pseudo-random file (so as to avoid compression techniques) from the server to the client. The same is done for a tcp server (Apache) and a tcp client (using wget)
 The network is simulated under different parameters, which can be changed at will. Default values are:
 •	Network delay (ms): 10, 20, 40, 60, 80, 100, or 120
 •	Packet loss(%): 0, 2.5 or 5
