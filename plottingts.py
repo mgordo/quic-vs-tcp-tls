@@ -2,7 +2,9 @@
 """
 Created on Sun Sep 27 16:09:39 2015
 
-@author: Miguel Gordo
+@author: mgordo
+This script generates time series for the processed data extracted from the tests in the /processed folder
+Change paths as needed. Run averaging.py before!
 """
 import time;
 import numpy as np;

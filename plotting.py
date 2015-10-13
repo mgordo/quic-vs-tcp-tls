@@ -2,7 +2,9 @@
 """
 Created on Sun Sep 27 16:09:39 2015
 
-@author: Miguel Gordo
+@author: mgordo
+This file creates all plots that are not time series (bandwidth, overhead and time) vs (delay, bandwidth, packet loss)
+Set paths accordingly, and run script.py, preprocess.py and averaging.py before this script!
 """
 import time;
 import numpy as np;

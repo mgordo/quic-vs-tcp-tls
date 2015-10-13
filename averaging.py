@@ -2,7 +2,9 @@
 """
 Created on Fri Sep 25 18:46:10 2015
 
-@author: Miguel
+@author: mgordo
+This script averages diferent instances of the same test. By default, each test is run five times.
+Run this script after script.py and preprocess.py
 """
 
 """
@@ -82,9 +84,9 @@ for method in methods:
                                 print('File '+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'_'+number+'.txt not found')
                                 
                         if(not err):    
-                            avg_overhead/=5
-                            avg_delay/=5
-                            avg_bandwidth/=5
+                            avg_overhead/=len(testnumber)
+                            avg_delay/=len(testnumber)
+                            avg_bandwidth/=len(testnumber)
                             avg_bandwidth/=1000000
                             listbw[:]=[x/1000000 for x in listbw]
                             fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
@@ -97,7 +99,7 @@ for method in methods:
                             fichero=os.path.normpath(pathfile+'/AVGSUM'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
                             f=open(fichero,'w')                        
                             for key in sorted(dic.keys()):
-                                f.write(str(key)+' '+str(float(float(dic[key])/5))+'\n')
+                                f.write(str(key)+' '+str(float(float(dic[key])/len(testnumber)))+'\n')
                                 
                             f.close()
                             print 'SUCCESS '+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt'

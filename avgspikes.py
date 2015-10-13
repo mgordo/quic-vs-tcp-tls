@@ -2,7 +2,10 @@
 """
 Created on Fri Oct 09 01:00:18 2015
 
-@author: Miguel
+@author: mgordo
+This script is to be run after script.py and preprocess.py.
+It averages spike tests, so as to present only the behaviour against a sudden decrease
+in bandwidth in -1.5 seconds before the spike, and 7 seconds after
 """
 
 import time;

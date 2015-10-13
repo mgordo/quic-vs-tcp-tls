@@ -2,7 +2,11 @@
 """
 Created on Fri Sep 25 12:44:22 2015
 
-@author: Miguel Gordo
+@author: mgordo
+This script takes the output of script.py from the openPath folder, and processes
+the files in order to extract only the data required (timestamp and bytes). 
+Output files saved to /processed
+This script should be run after script.py
 """
 import time;
 import numpy as np;
