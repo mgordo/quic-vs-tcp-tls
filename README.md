@@ -43,7 +43,7 @@ Python version:	2.7.8
 
 The results are stored in the /plots folder.
 
-You should run the scripts in the following order: script.py, preprocess.py, averaging.py, avgspikes.py, plotting.py, plottingts.py.
+After setting up the servers and clients both for quic and tcp, you should run the scripts in the following order: script.py, preprocess.py, averaging.py, avgspikes.py, plotting.py, plottingts.py.
 You can change in the scripts the relevant paths to the folders.
 You can find information at how to set up a quic test server and test clients at www.chromium.org
 
