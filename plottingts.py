@@ -64,6 +64,31 @@ for mean in means:
                         mindex+=1
                         
                     #plotting takes place
+                    vardelq='0'
+                    varbwq='0'
+                    fichero=os.path.normpath(pathfile+'/AVGDATAquic_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                    try:                        
+                        with open(fichero,'r') as f:
+                            f.readline()
+                            line=f.readline()
+                            parts=line.split()
+                            vardelq="{0:.3f}".format(round(float(parts[1]),2))
+                            varbwq="{0:.3f}".format(round(float(parts[2]),2))
+                    except Exception as error:
+                        err=True
+                        
+                    vardelt='0'
+                    varbwt='0'
+                    fichero=os.path.normpath(pathfile+'/AVGDATAtcp_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                    try:                        
+                        with open(fichero,'r') as f:
+                            f.readline()
+                            line=f.readline()
+                            parts=line.split()
+                            vardelt="{0:.3f}".format(round(float(parts[1]),2))
+                            varbwt="{0:.3f}".format(round(float(parts[2]),2))
+                    except Exception as error:
+                        err=True
                     if(not err):
 #                        longerlist=0 if (len(dictionary[0].keys())>=len(dictionary[1].keys())) else 1
 #                        shorterlist=(longerlist +1) %2
@@ -77,7 +102,7 @@ for mean in means:
                         plt.plot(np.arange(float(min(dictionary[1].keys())),float(max(dictionary[1].keys()))+0.5,0.5),dictionary[1].values(),"x-", linewidth=0.6, label="TCP")
                         plt.xlabel('Time in seconds')
                         plt.ylabel('Throughput (Mbps)')
-                        plt.title('Throughput Comparison: Delay '+mean+' ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, PckLoss: '+loss+'%, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                        plt.title('Throughput Comparison: Delay '+mean+' ms, Jitter '+variance+' ms, Bandwidth '+bandwidth+' Mbps, PckLoss: '+loss+'%, with '+('no ' if int(spike)==0 else '' )+'spikes\nQUIC: Duration Std. Deviation: '+vardelq+' s, Bandwidth Std. Deviation: '+varbwq+' Mbps\nTCP: Duration Std. Deviation: '+vardelt+' s, Bandwidth Std. Deviation: '+varbwt+' Mbps');
                         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
                         rutafigura=os.path.normpath(plotfolder+'/BWPLOT_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.png')
                         plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300

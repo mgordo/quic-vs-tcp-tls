@@ -10,7 +10,6 @@ import time;
 import numpy as np;
 import sys
 import collections
-import matplotlib
 from datetime import datetime
 import os
 import re
@@ -18,12 +17,12 @@ from os import listdir
 from os.path import isfile, join
 import matplotlib.pyplot as plt
 
-means=['10', '20', '40', '60', '80', '100', '120']
-variances=['0', '10', '20', '40', '50']
-losses=['0.0','2.5','5.0']
-bandwidths=['1','40','100']
+means=[10, 20, 40, 60, 80, 100, 120]
+variances=[0, 10, 20, 40, 50]
+losses=[0.0,2.5,5.0]
+bandwidths=[1,40,100]
 methods=['quic','tcp']
-spikes=['0','1']
+spikes=[0,1]
 
 
 pathfile=os.path.normpath('C:/Users/Miguel/Desktop/Scientific/processed/')
@@ -48,7 +47,7 @@ for mean in means:
                     erroroh[method]=[]
                     errorti[method]=[]
                     for loss in losses:
-                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt')
                         try:                        
                             with open(fichero,'r') as f:
                                 line=f.readline()
@@ -63,37 +62,40 @@ for mean in means:
                                 errorti[method].append(float(parts[1]))
                         except Exception as error:
                             err=True
-                            print('File AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt not found')
+                            print('File AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt not found')
                     #Here plotting takes place
                 if(not err):
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(losses,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(losses,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(losses,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(losses,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Packet Loss (%)')                    
                     plt.ylabel('Throughput (Mbps)')
-                    plt.title('Throughput Comparison against packet loss: Delay '+mean+' ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(losses)-1,max(losses)+1)
+                    plt.title('Throughput Comparison against packet loss: Delay '+str(mean)+' ms, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/BWVSLOSSAVGPLOT_'+bandwidth+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/BWVSLOSSAVGPLOT_'+str(bandwidth)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(losses,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(losses,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(losses,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(losses,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Packet Loss (%)')
                     plt.ylabel('Overhead (MB)')
-                    plt.title('Overhead Comparison against packet loss: Delay '+mean+' ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(losses)-1,max(losses)+1)
+                    plt.title('Overhead Comparison against packet loss: Delay '+str(mean)+' ms, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/OHVSLOSSAVGPLOT_'+bandwidth+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/OHVSLOSSAVGPLOT_'+str(bandwidth)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(losses,dicti[methods[0]],yerr=errorti[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(losses,dicti[methods[1]],yerr=errorti[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(losses,dicti[methods[0]],yerr=errorti[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(losses,dicti[methods[1]],yerr=errorti[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Packet Loss (%)')
                     plt.ylabel('Total time for transfer (s)')
-                    plt.title('Time transfer Comparison vs packet loss: Delay '+mean+' ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(losses)-1,max(losses)+1)
+                    plt.title('Time transfer Comparison vs packet loss: Delay '+str(mean)+' ms, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/TIVSLOSSAVGPLOT_'+bandwidth+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/TIVSLOSSAVGPLOT_'+str(bandwidth)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     
@@ -119,7 +121,7 @@ for variance in variances:
                     errorti[method]=[]
                     
                     for mean in means:
-                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt')
                         try:                        
                             with open(fichero,'r') as f:
                                 line=f.readline()
@@ -135,38 +137,41 @@ for variance in variances:
                                     
                         except Exception as error:
                             err=True
-                            print('File AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt not found')
+                            print('File AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt not found')
                     #Here plotting takes place
                             
                 if(not err):
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(means,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt="x-" ,label="QUIC")
-                    plt.errorbar(means,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(means,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(means,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Delay (ms)')                    
                     plt.ylabel('Throughput (Mbps)')
-                    plt.title('Throughput Comparison vs delay: Ploss '+loss+'%, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(means)-1,max(means)+1)
+                    plt.title('Throughput Comparison vs delay: Ploss '+str(loss)+'%, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/BWVSDELSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/BWVSDELSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(means,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(means,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(means,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(means,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Delay (ms)')
                     plt.ylabel('Overhead (MB)')
-                    plt.title('Overhead Comparison vs delay: Ploss '+loss+'%, ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(means)-1,max(means)+1)
+                    plt.title('Overhead Comparison vs delay: Ploss '+str(loss)+'%, ms, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/OHVSDELSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/OHVSDELSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(means,dicti[methods[0]],yerr=errorti[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(means,dicti[methods[1]],yerr=errorti[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(means,dicti[methods[0]],yerr=errorti[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(means,dicti[methods[1]],yerr=errorti[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Delay (ms)')
                     plt.ylabel('Total time for transfer (s)')
-                    plt.title('Time transfer Comparison vs delay: Ploss '+loss+'%, ms, Variance '+variance+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(means)-1,max(means)+1)
+                    plt.title('Time transfer Comparison vs delay: Ploss '+str(loss)+'%, ms, Jitter '+str(variance)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/TIVSDELSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/TIVSDELSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     
@@ -190,7 +195,7 @@ for mean in means:
                     erroroh[method]=[]
                     errorti[method]=[]
                     for bandwidth in bandwidths:
-                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt')
                         try:                        
                             with open(fichero,'r') as f:
                                 
@@ -206,38 +211,41 @@ for mean in means:
                                 errorti[method].append(float(parts[1]))
                         except Exception as error:
                             err=True
-                            print('File AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt not found')
+                            print('File AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt not found')
                 #Here plotting takes place
                             
                 if(not err):
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(bandwidths,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(bandwidths,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(bandwidths,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(bandwidths,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Bandwidth (Mbps)')                    
                     plt.ylabel('Throughput (Mbps)')
-                    plt.title('Throughput Comparison vs Bandwidth: Ploss '+loss+'%, Variance '+variance+' ms, Delay '+mean+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(bandwidths)-1,max(bandwidths)+1)
+                    plt.title('Throughput Comparison vs Bandwidth: Ploss '+str(loss)+'%, Jitter '+str(variance)+' ms, Delay '+str(mean)+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/BWVSBWSAVGPLOT_'+loss+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/BWVSBWSAVGPLOT_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(bandwidths,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(bandwidths,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(bandwidths,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(bandwidths,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Bandwidth (Mbps)')
                     plt.ylabel('Overhead (MB)')
-                    plt.title('Overhead Comparison vs delay: Ploss '+loss+'%, ms, Variance '+variance+' ms, Delay '+mean+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(bandwidths)-1,max(bandwidths)+1)
+                    plt.title('Overhead Comparison vs delay: Ploss '+str(loss)+'%, ms, Jitter '+str(variance)+' ms, Delay '+str(mean)+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/OHVSBWSAVGPLOT_'+loss+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/OHVSBWSAVGPLOT_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(bandwidths,dicti[methods[0]],yerr=errorti[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(bandwidths,dicti[methods[1]],yerr=errorti[methods[1]],fmt="x-", label="TCP")
+                    plt.errorbar(bandwidths,dicti[methods[0]],yerr=errorti[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(bandwidths,dicti[methods[1]],yerr=errorti[methods[1]],fmt='d', capthick=2, label="TCP")
                     plt.xlabel('Bandwidth (Mbps)')
                     plt.ylabel('Total time for transfer (s)')
-                    plt.title('Time transfer Comparison vs delay: Ploss '+loss+'%, ms, Variance '+variance+' ms, Delay '+mean+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(bandwidths)-1,max(bandwidths)+1)
+                    plt.title('Time transfer Comparison vs delay: Ploss '+str(loss)+'%, ms, Jitter '+str(variance)+' ms, Delay '+str(mean)+' ms, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/TIVSBWSAVGPLOT_'+loss+'_'+mean+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/TIVSBWSAVGPLOT_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                 
@@ -264,7 +272,7 @@ for mean in means:
                     errorti[method]=[]
                     
                     for variance in variances:
-                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt')
+                        fichero=os.path.normpath(pathfile+'/AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt')
                         try:                        
                             with open(fichero,'r') as f:
                                 line=f.readline()
@@ -280,38 +288,41 @@ for mean in means:
                                     
                         except Exception as error:
                             err=True
-                            print('File AVGDATA'+method+'_'+bandwidth+'_'+loss+'_'+mean+'_'+variance+'_'+spike+'.txt not found')
+                            print('File AVGDATA'+method+'_'+str(bandwidth)+'_'+str(loss)+'_'+str(mean)+'_'+str(variance)+'_'+str(spike)+'.txt not found')
                     #Here plotting takes place
                             
                 if(not err):
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(variances,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt="x-" ,label="QUIC")
-                    plt.errorbar(variances,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt="x-", label="TCP")
-                    plt.xlabel('Variance (ms)')                    
+                    plt.errorbar(variances,dicbw[methods[0]],yerr=errorbw[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(variances,dicbw[methods[1]],yerr=errorbw[methods[1]],fmt='d', capthick=2, label="TCP")
+                    plt.xlabel('Jitter (ms)')                    
                     plt.ylabel('Throughput (Mbps)')
-                    plt.title('Throughput Comparison vs delay: Ploss '+loss+'%, Delay '+mean+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(variances)-1,max(variances)+1)
+                    plt.title('Throughput Comparison vs delay: Ploss '+str(loss)+'%, Delay '+str(mean)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/BWVSVARSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/BWVSVARSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(variances,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(variances,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt="x-", label="TCP")
-                    plt.xlabel('Variance (ms)')
+                    plt.errorbar(variances,dicoh[methods[0]],yerr=erroroh[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(variances,dicoh[methods[1]],yerr=erroroh[methods[1]],fmt='d', capthick=2, label="TCP")
+                    plt.xlabel('Jitter (ms)')
                     plt.ylabel('Overhead (MB)')
-                    plt.title('Overhead Comparison vs delay: Ploss '+loss+'%, ms, Delay '+mean+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(variances)-1,max(variances)+1)
+                    plt.title('Overhead Comparison vs delay: Ploss '+str(loss)+'%, ms, Delay '+str(mean)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/OHVSVARSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/OHVSVARSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     plt.figure(figsize=(8,5))
-                    plt.errorbar(variances,dicti[methods[0]],yerr=errorti[methods[0]],fmt="x-", label="QUIC")
-                    plt.errorbar(variances,dicti[methods[1]],yerr=errorti[methods[1]],fmt="x-", label="TCP")
-                    plt.xlabel('Variance (ms)')
+                    plt.errorbar(variances,dicti[methods[0]],yerr=errorti[methods[0]],fmt='d', capthick=2, label="QUIC")
+                    plt.errorbar(variances,dicti[methods[1]],yerr=errorti[methods[1]],fmt='d', capthick=2, label="TCP")
+                    plt.xlabel('Jitter (ms)')
                     plt.ylabel('Total time for transfer (s)')
-                    plt.title('Time transfer Comparison vs delay: Ploss '+loss+'%, ms, Delay '+mean+' ms, Bandwidth '+bandwidth+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
+                    plt.xlim(min(variances)-1,max(variances)+1)
+                    plt.title('Time transfer Comparison vs delay: Ploss '+str(loss)+'%, ms, Delay '+str(mean)+' ms, Bandwidth '+str(bandwidth)+' Mbps, with '+('no ' if int(spike)==0 else '' )+'spikes');
                     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-                    rutafigura=os.path.normpath(plotfolder+'/TIVSVARSAVGPLOT_'+bandwidth+'_'+loss+'_'+variance+'_'+spike+'.png')
+                    rutafigura=os.path.normpath(plotfolder+'/TIVSVARSAVGPLOT_'+str(bandwidth)+'_'+str(loss)+'_'+str(variance)+'_'+str(spike)+'.png')
                     plt.savefig(rutafigura,dpi=150,bbox_inches='tight')#, ,dpi=300
                     
                     
